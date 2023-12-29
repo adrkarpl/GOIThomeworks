@@ -48,6 +48,17 @@ def command_hint(user_str: str, commands, threshold: int = 0) -> str:
     return hint
 
 
+def get_contact_data():
+    return {
+        "name": input("Enter name: ").strip(),
+        "phone": input("Enter phone: ").strip(),
+        "email": input("Enter email: ").strip(),
+        "birthday": input("Enter birthday: ").strip(),
+        "address": input("Enter address: ").strip(),
+        "tag": input("Enter tag: ").strip(),
+        "notes": input("Enter your notes: ").strip(),
+    }
+
 def main():
     print(
         """
@@ -121,84 +132,43 @@ After entering the command, you will be asked for additional information if need
         ".": user_addr_book.func_exit,
     }
     while True:
-        listen_enterred = input("\nEnter your command here: ")
-        listen = listen_enterred.lower().strip()
-        if listen in OPERATIONS_MAP:
-            if listen == "add":
-                name = input("Enter name: ").strip()
-                phone = input("Enter phone: ").strip()
-                email = input("Enter email: ").strip()
-                birthday = input("Enter birthday: ").strip()
-                address = input("Enter address: ").strip()
-                tag = input("Enter tag: ").strip()
-                notes = input("Enter your notes: ").strip()
-                OPERATIONS_MAP[listen](
-                    name, phone, email, birthday, address, tag, notes
-                )
-            elif listen in [
-                "find",
-                "birthday",
-                "delete contact",
-                "delete phone",
-                "delete email",
-                "delete birthday",
-                "delete address",
-                "delete tag",
-                "delete notes",
-            ]:
-                name = input("Enter name: ").strip()
-                OPERATIONS_MAP[listen](name)
-            elif listen == "upcoming birthdays":
-                keyword = input(
-                    "Which time frame from today would you like to check? Please input the number of days from now: "
-                ).strip()
-                OPERATIONS_MAP[listen](keyword)
-            elif listen in ["search", "search notes"]:
-                keyword = input("Enter keyword: ").strip()
-                OPERATIONS_MAP[listen](keyword)
-            elif listen == "edit phone":
-                name = input("Enter name of the contact to edit phone: ").strip()
-                new_phone = input("Enter new phone number: ").strip()
-                OPERATIONS_MAP[listen](name, new_phone)
-            elif listen == "edit email":
-                name = input("Enter name of the contact to edit email: ").strip()
-                new_email = input("Enter new email: ").strip()
-                OPERATIONS_MAP[listen](name, new_email)
-            elif listen == "edit birthday":
-                name = input("Enter name of the contact to edit birthday: ").strip()
-                new_birthday = input("Enter new birthday: ").strip()
-                OPERATIONS_MAP[listen](name, new_birthday)
-            elif listen == "edit address":
-                name = input("Enter name of the contact to edit address: ").strip()
-                new_address = input("Enter new address: ").strip()
-                OPERATIONS_MAP[listen](name, new_address)
-            elif listen == "edit tag":
-                name = input("Enter name of the contact to edit tag: ").strip()
-                new_tag = input("Enter new tag: ").strip()
-                OPERATIONS_MAP[listen](name, new_tag)
-            elif listen == "edit notes":
-                name = input("Enter name of the contact to edit tag: ").strip()
-                new_notes = input("Enter new notes: ").strip()
-                OPERATIONS_MAP[listen](name, new_notes)
-            elif listen == "show":
-                try:
-                    number_of_contacts = int(
-                        input("Enter number of contacts to display: ")
-                    )
-                    OPERATIONS_MAP[listen](number_of_contacts)
-                except:
-                    print("Entered number is not an integer. Please try again.")
+        listen_entered = input("\nEnter your command here: ")
+        listen = listen_entered.lower().strip()
+        try:
+            if listen in OPERATIONS_MAP:
+                if listen == "add":
+                    user_data = get_contact_data()
+                    OPERATIONS_MAP[listen](**user_data)
+                elif listen in [
+                    "find",
+                    "birthday",
+                    "delete contact",
+                    "delete phone",
+                    "delete email",
+                    "delete birthday",
+                    "delete address",
+                    "delete tag",
+                    "delete notes",
+                ]:
+                    name = input("Enter name: ").strip()
+                    OPERATIONS_MAP[listen](name)
+                elif listen == "upcoming birthdays":
+                    keyword = input(
+                        "Which time frame from today would you like to check? Please input the number of days from now: "
+                    ).strip()
+                    OPERATIONS_MAP[listen](keyword)
+                elif listen in ["search", "search notes"]:
+                    keyword = input("Enter keyword: ").strip()
+                    OPERATIONS_MAP[listen](keyword)
+                else:
+                    OPERATIONS_MAP[listen]()
             elif listen in ["good bye", "close", "exit", "."]:
                 user_addr_book.save_to_file()
                 OPERATIONS_MAP[listen.lower()]()
             else:
-                OPERATIONS_MAP[listen.lower()]()
-        else:
-            hint_for_user = command_hint(listen, OPERATIONS_MAP.keys())
-            if hint_for_user:  # not empty string
-                print(hint_for_user)
-            else:
                 print("Invalid command.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
 
 if __name__ == "__main__":
