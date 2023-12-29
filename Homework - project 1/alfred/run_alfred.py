@@ -1,4 +1,4 @@
-from .addressbook import AddressBook
+from alfred.addressbook import AddressBook
 from thefuzz import fuzz
 
 
