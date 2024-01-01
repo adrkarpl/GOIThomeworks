@@ -1,9 +1,10 @@
-from collections import UserDict
+from abc import ABC, abstractmethod
+#from collections import UserDict
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 import pickle
 from pathlib import Path
-from .record import Notes, Record, Name, Phone, Email, Birthday, Address, Tag
+from alfred.record import Notes, Record, Name, Phone, Email, Birthday, Address, Tag
 import textwrap
 
 
@@ -26,8 +27,114 @@ class MyContactsIterator:
         raise StopIteration
 
 
+class AbstractAddressBook(ABC):
+    @abstractmethod
+    def read_from_file(self):
+        pass
+
+    @abstractmethod
+    def save_to_file(self):
+        pass
+
+    @abstractmethod
+    def func_hello(self):
+        pass
+
+    @abstractmethod
+    def func_find(self, name):
+        pass
+
+    @abstractmethod
+    def func_search(self, keyword):
+        pass
+
+    @abstractmethod
+    def func_search_notes(self, keyword):
+        pass
+
+    @abstractmethod
+    def func_show_all(self):
+        pass
+
+    @abstractmethod
+    def func_show(self, number_of_contacts):
+        pass
+
+    @abstractmethod
+    def func_show_notes(self):
+        pass
+
+    @abstractmethod
+    def func_add(self, name, phone=None, email=None, birthday=None, address=None, tag=None, notes=None):
+        pass
+
+    @abstractmethod
+    def func_birthday(self, name):
+        pass
+
+    @abstractmethod
+    def func_upcoming_birthdays(self, days_str):
+        pass
+
+    @abstractmethod
+    def func_edit_phone(self, name, new_phone):
+        pass
+
+    @abstractmethod
+    def func_edit_email(self, name, new_email):
+        pass
+
+    @abstractmethod
+    def func_edit_birthday(self, name, new_birthday):
+        pass
+
+    @abstractmethod
+    def func_delete_contact(self, name):
+        pass
+
+    @abstractmethod
+    def func_delete_phone(self, name):
+        pass
+
+    @abstractmethod
+    def func_delete_email(self, name):
+        pass
+
+    @abstractmethod
+    def func_delete_birthday(self, name):
+        pass
+
+    @abstractmethod
+    def func_edit_address(self, name, new_address):
+        pass
+
+    @abstractmethod
+    def func_delete_address(self, name):
+        pass
+
+    @abstractmethod
+    def func_edit_tag(self, name, new_tag):
+        pass
+
+    @abstractmethod
+    def func_delete_tag(self, name):
+        pass
+
+    @abstractmethod
+    def func_edit_notes(self, name, new_notes):
+        pass
+
+    @abstractmethod
+    def func_delete_notes(self, name):
+        pass
+
+    @abstractmethod
+    def func_exit(self):
+        pass
+
+
 @dataclass
-class AddressBook(UserDict):
+class AddressBook(AbstractAddressBook):
     def __init__(self):
         self.counter: int
         self.filename = "contacts.bin"
@@ -756,46 +863,5 @@ class AddressBook(UserDict):
 
     @input_error
     def func_exit(self):
-        print(
-            """
-                                           ..::::------:::..                                           
-                                 .:-=+*#%@@@@@@@@@@@@@@@@@@@@%##*+=:.                                  
-                            :-+#%@@@@@@@@@@@@%%##******##%%@@@@@@@@@@@#*=:                             
-                        :+#@@@@@@@%#*+=-:..                 ..:-=+*%@@@@@@@#+-.                        
-                    .=*@@@@@@#+=:                                    :-+#@@@@@@#=.                     
-                  -#@@@@@#=:    .-=*:        -.         =         =+-:    :=*%@@@@#=.                  
-               :*@@@@%+-    :=*%@@@=         +%:      .*@:        .#@@@#+-.   :=#@@@@#-                
-             -#@@@%+:   :+#@@@@@@@+          #@@#*****@@@-         .%@@@@@@#+:   .=%@@@%=              
-           :#@@@#-   :+%@@@@@@@@@#           %@@@@@@@@@@@=          -@@@@@@@@@%+:   :*@@@%=            
-         .*@@@#-   -#@@@@@@@@@@@@:           @@@@@@@@@@@@*           #@@@@@@@@@@@#-   :*@@@#:          
-        :%@@%-   -%@@@@@@@@@@@@@%           .@@@@@@@@@@@@#           =@@@@@@@@@@@@@%-   :#@@@=         
-       =@@@*.  .#@@@@@@@@@@@@@@@#           -@@@@@@@@@@@@@           -@@@@@@@@@@@@@@@#.   +@@@*        
-      =@@@=   -@@@@@@@@@@@@@@@@@%           =@@@@@@@@@@@@@:          +@@@@@@@@@@@@@@@@@-   -%@@*       
-     =@@@=   +@@@@@@@@@@@@@@@@@@@-          %@@@@@@@@@@@@@=          %@@@@@@@@@@@@@@@@@@+   :%@@*      
-    :@@@=   =@@@@@@@@@@@@@@@@@@@@%.        =@@@@@@@@@@@@@@@:        *@@@@@@@@@@@@@@@@@@@@=   :@@@-     
-    #@@#   :@@@@@@@@@@@@@@@@@@@@@@%-      +@@@@@@@@@@@@@@@@%-     :#@@@@@@@@@@@@@@@@@@@@@@:   +@@%     
-   .@@@:   *@@@@@@@@@@@@@@@@@@@@@@@@%*==*%@@@@@@@@@@@@@@@@@@@%*+*#@@@@@@@@@@@@@@@@@@@@@@@@*   .@@@=    
-   =@@%    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    *@@*    
-   +@@#   .@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.   +@@%    
-   +@@#   .@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    Good bye!    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.   +@@%    
-   =@@@    %@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%    *@@*    
-   .@@@-   =@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@=   .@@@=    
-    *@@#    #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#    +@@%     
-    .@@@+    *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#.   :@@@-     
-     -@@@=    -%@@@@@@@@@@=.   :=#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%+-:.:=%@@@@@@@@@@#.   :%@@+      
-      =@@@=    .*@@@@@@@@-        :#@@@@@*==*%@@@@@@@@@@@%*++%@@@@@*:       .%@@@@@@@@=    -@@@*       
-       =@@@*.    :*@@@@@@.          =@@%:     =@@@@@@@@%-     +@@%-          +@@@@@@*.    +@@@+        
-        :%@@%=     :*@@@@=           :%:       .%@@@@@#.       *%.           #@@@@*:    -%@@@=         
-         .+@@@%-     .+%@%.                     .%@@@#         ..           :@@%+.    :#@@@#.          
-           :#@@@%=.     :+*.                     :@@@:                     .#+-     -#@@@%-            
-             :#@@@@*:                             +@+                      .     :+%@@@%=              
-               :+@@@@%+-                          .%.                         :+%@@@@*-                
-                  -*@@@@@#=:                       :                      :=*@@@@@#=.                  
-                    .-*%@@@@@#*=:.                                   :-+#@@@@@@*=.                     
-                        :=*%@@@@@@@#*+=-::.                ..:-=+*#%@@@@@@@#+:                         
-                            .-+*%@@@@@@@@@@@@%%%#######%%%@@@@@@@@@@@%#+-:                             
-                                  :-=+*#%%@@@@@@@@@@@@@@@@@@%%#*+=-:.                                  
-                                           ...::------:::.                      
-"""
-        )
+        print("Good bye!")
         exit()
