@@ -66,7 +66,7 @@ Sample table of notes:
 
    - Clone this repository into a folder of choice on your local machine using the following command:
      ```
-     git clone https://github.com/rafalradx/alfred-assist-bot
+     git clone https://github.com/adrkarpl/GOIThomeworks/Homework%20-%20project%201
      ```
 
 2. **Install dependencies:**
