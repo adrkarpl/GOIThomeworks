@@ -4,8 +4,6 @@ from datetime import date, timedelta
 import abc
 import json
 
-# ad
-
 
 class APIInterface(abc.ABC):
     @abc.abstractmethod
